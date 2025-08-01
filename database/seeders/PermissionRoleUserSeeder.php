@@ -21,6 +21,7 @@ class PermissionRoleUserSeeder extends Seeder
         Permission::create(['name' => 'view tugas']);
         Permission::create(['name' => 'view mata-pelajaran']);
         Permission::create(['name' => 'view materi-pelajaran']);
+        Permission::create(['name' => 'view materi-pelajaran-siswa']);
         Permission::create(['name' => 'view tahun-ajaran']);
         Permission::create(['name' => 'view siswa']);
         Permission::create(['name' => 'view pegawai']);
@@ -38,6 +39,7 @@ class PermissionRoleUserSeeder extends Seeder
 
         $roleSuperAdmin->givePermissionTo('view tugas');
         $roleSuperAdmin->givePermissionTo('view mata-pelajaran');
+        $roleSuperAdmin->givePermissionTo('view materi-pelajaran');
         $roleSuperAdmin->givePermissionTo('view tahun-ajaran');
         $roleSuperAdmin->givePermissionTo('view siswa');
         $roleSuperAdmin->givePermissionTo('view pegawai');
@@ -46,9 +48,12 @@ class PermissionRoleUserSeeder extends Seeder
 
         $roleGuru->givePermissionTo('view tugas');
         $roleGuru->givePermissionTo('view mata-pelajaran');
+        $roleGuru->givePermissionTo('view materi-pelajaran');
         $roleGuru->givePermissionTo('view rekap-nilai');
 
         $roleSiswa->givePermissionTo('view pengumpulan-tugas');
+        $roleSiswa->givePermissionTo('view mata-pelajaran');
+        $roleSiswa->givePermissionTo('view materi-pelajaran-siswa');
         $roleSiswa->givePermissionTo('view rekap-nilai-siswa');
 
         // Tambah User SuperAdmin

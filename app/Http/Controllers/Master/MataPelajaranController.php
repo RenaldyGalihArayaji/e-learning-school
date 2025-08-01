@@ -24,7 +24,12 @@ class MataPelajaranController extends Controller
             $mataPelajaran = MataPelajaran::with(['kelas', 'guruPengampu', 'tahunAjaran'])
                 ->where('guru_pengampu_id', $user->pegawai->id)
                 ->get();
-        } else {
+        } else if(in_array('siswa', $roles)) {
+            $mataPelajaran = MataPelajaran::with(['kelas', 'guruPengampu', 'tahunAjaran'])
+                ->whereHas('kelas.siswas', function($query) use ($user) {
+                    $query->where('id', $user->siswa->id);
+                })->get();
+        }else {
             $mataPelajaran = collect();
         }
         return view('master.mata-pelajaran.index', ['title' => 'Mata Pelajaran'], compact('mataPelajaran'));

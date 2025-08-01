@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="title">
-        <h1 class="h3 mb-0 text-gray-800">Mata Pelajaran | <span
+        <h1 class="h3 mb-0 text-gray-800">Mata Pelajaran| <span
                 class="text-secondary fs-5">{{ ucwords($mataPelajaran->nama_mata_pelajaran) }} </span></h1>
     </div>
     <div class="content-wrapper">
@@ -10,13 +10,15 @@
             <div class="col-md-12">
                 <div class="card">
                     <div class="card-header">
-                        <h4>Tabel Materi Pelajaran</h4>
+                       <h4>Tabel Materi Pelajaran</h4>
                     </div>
                     <div class="card-body">
                         <div class="d-flex justify-content-between align-items-center">
                             <div>
+                                @can('view materi-pelajaran')
                                 <button class="btn mb-3 icon-left btn-primary btn-sm"
                                     onclick="create({{ $mataPelajaran->id }})"><i class="ti-plus"></i>Tambah Data</button>
+                                @endcan
                             </div>
                             <div>
                                 <a href="{{ route('mata-pelajaran.index') }}"
@@ -24,30 +26,29 @@
                                         class="bi bi-arrow-left-circle me-2"></i>Kembali</a>
                             </div>
                         </div>
-
-                        <div>
-                            <table id="example2" class="table dt-responsive display">
-                                <thead>
+                        <table id="example2" class="table dt-responsive display">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Judul Materi</th>
+                                    <th>Tanggal Upload</th>
+                                    <th>Deskripsi</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach ($materiPelajaran as $item)
                                     <tr>
-                                        <th>No</th>
-                                        <th>Judul Materi</th>
-                                        <th>Tanggal Upload</th>
-                                        <th>Deskripsi</th>
-                                        <th>Aksi</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($materiPelajaran as $item)
-                                        <tr>
-                                            <td>{{ $loop->iteration }}</td>
-                                            <td>{{ ucwords($item->judul) }}</td>
-                                            <td>{{ $item->tanggal_upload }}</td>
-                                            <td>{{ ucwords($item->deskripsi) }}</td>
-                                            <td>
-                                                <button class="btn btn-outline-warning btn-sm my-1"
+                                        <td>{{ $loop->iteration }}</td>
+                                        <td>{{ ucwords($item->judul) }}</td>
+                                        <td>{{ $item->tanggal_upload }}</td>
+                                        <td>{{ ucwords($item->deskripsi) }}</td>
+                                        <td>
+                                             <button class="btn btn-outline-warning btn-sm my-1"
                                                     onclick="show({{ $item->id }})">
                                                     <i class="ti-eye"></i>
                                                 </button>
+                                                @can('view materi-pelajaran')
                                                 <button class="btn btn-outline-success btn-sm"
                                                     onclick="edit({{ $item->id }})"><i
                                                         class="ti-pencil-alt"></i></button>
@@ -58,50 +59,51 @@
                                                     <button type="submit" class="btn btn-danger btn-sm confirm-delete"><i
                                                             class="ti-trash"></i></button>
                                                 </form>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
+                                                @endcan
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 
 
-        {{-- Modal --}}
+    {{-- Modal --}}
 
-        <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-            aria-labelledby="staticBackdropLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="staticBackdropLabel"></h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div id="page" class="p-2"></div>
-                    </div>
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel"></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="page" class="p-2"></div>
                 </div>
             </div>
         </div>
-    @endsection
+    </div>
+@endsection
 
-    @push('scripts')
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-        <script src="{{ asset('template-admin/vendor/datatables.net/js/jquery.dataTables.min.js') }}"></script>
-        <script src="{{ asset('template-admin/vendor/datatables.net-bs5/js/dataTables.bootstrap5.min.js') }}"></script>
-        <script src="{{ asset('template-admin/vendor/datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script>
-        <script src="{{ asset('template-admin/vendor/datatables.net-responsive-bs5/js/responsive.bootstrap5.min.js') }}">
-        </script>
-        <script src="{{ asset('template-admin//assets/js/pages/datatables.min.js') }}"></script>
-        {{-- sweetalert2 --}}
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-        <!-- start - This is for export functionality only -->
-        <script>
-            DataTable.init()
-        </script>
+@push('scripts')
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="{{ asset('template-admin/vendor/datatables.net/js/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('template-admin/vendor/datatables.net-bs5/js/dataTables.bootstrap5.min.js') }}"></script>
+    <script src="{{ asset('template-admin/vendor/datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script>
+    <script src="{{ asset('template-admin/vendor/datatables.net-responsive-bs5/js/responsive.bootstrap5.min.js') }}">
+    </script>
+    <script src="{{ asset('template-admin//assets/js/pages/datatables.min.js') }}"></script>
+    {{-- sweetalert2 --}}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- start - This is for export functionality only -->
+    <script>
+        DataTable.init()
+    </script>
 
         <script>
             $.ajaxSetup({
@@ -217,4 +219,4 @@
                 });
             }
         </script>
-    @endpush
+@endpush

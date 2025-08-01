@@ -20,6 +20,7 @@
                             <button class="btn mb-3 icon-left btn-primary btn-sm" onclick="create()"><i
                                     class="ti-plus"></i>Tambah Data</button>
                         @endif
+
                         <table id="example2" class="table dt-responsive display">
                             <thead>
                                 <tr>
@@ -28,7 +29,9 @@
                                     <th>Kelas</th>
                                     <th>Guru Pengampu</th>
                                     <th>Tahun Ajaran</th>
-                                    <th>Jumlah Siswa</th>
+                                    @can('view materi-pelajaran')
+                                        <th>Jumlah Siswa</th>
+                                    @endcan
                                     <th>Aksi</th>
                                 </tr>
                             </thead>
@@ -40,13 +43,17 @@
                                         <td>{{ $item->kelas->nama_kelas }}</td>
                                         <td>{{ ucwords($item->guruPengampu->nama_lengkap) }}</td>
                                         <td>{{ ucwords($item->tahunAjaran->nama_tahun_ajaran) }}</td>
-                                        <td>{{ $item->kelas->siswas->count() }}</td>
+                                        @can('view materi-pelajaran')
+                                            <td>{{ $item->kelas->siswas->count() }}</td>
+                                        @endcan
                                         <td>
-                                            <a href="{{ route('mata-pelajaran-siswa.index', $item->id) }}"
-                                                class="btn btn-outline-primary btn-sm my-1">Lihat Siswa</a>
-                                            <a href="{{ route('materi-pelajaran.index', $item->id) }}"
-                                                class="btn btn-outline-warning btn-sm my-1">Lihat Materi</a>
-                                            @if (
+                                            @can('view materi-pelajaran')
+                                                <a href="{{ route('mata-pelajaran-siswa.index', $item->id) }}"
+                                                    class="btn btn-outline-primary btn-sm my-1">Lihat Siswa</a>
+                                                    @endcan
+                                                    <a href="{{ route('materi-pelajaran.index', $item->id) }}"
+                                                        class="btn btn-outline-warning btn-sm my-1">Lihat Materi</a>
+                                                    @if (
                                                 (Auth::check() && Auth::user()->can('view pegawai')) ||
                                                     Auth::user()->can('view tahun-ajaran') ||
                                                     Auth::user()->can('view kelas') ||
@@ -58,7 +65,8 @@
                                                     method="post" class="d-inline">
                                                     @csrf
                                                     @method('delete')
-                                                    <button type="submit" class="btn btn-outline-danger btn-sm confirm-delete"><i
+                                                    <button type="submit"
+                                                        class="btn btn-outline-danger btn-sm confirm-delete"><i
                                                             class="ti-trash"></i></button>
                                             @endif
                                             </form>
