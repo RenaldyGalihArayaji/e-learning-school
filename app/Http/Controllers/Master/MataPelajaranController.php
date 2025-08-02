@@ -18,28 +18,39 @@ class MataPelajaranController extends Controller
     {
         $user = Auth::user();
         $roles = $user->roles->pluck('name')->toArray();
+        $mataPelajaran = collect(); // Inisialisasi collection kosong sebagai default
+
         if (in_array('super-admin', $roles)) {
+            // Jika Super Admin, ambil semua data mata pelajaran
             $mataPelajaran = MataPelajaran::with(['kelas', 'guruPengampu', 'tahunAjaran'])->orderBy('created_at', 'desc')->get();
         } else if (in_array('guru', $roles)) {
-            $mataPelajaran = MataPelajaran::with(['kelas', 'guruPengampu', 'tahunAjaran'])
-                ->where('guru_pengampu_id', $user->pegawai->id)
-                ->orderBy('created_at', 'desc')->get();
-        } else if(in_array('siswa', $roles)) {
-            $mataPelajaran = MataPelajaran::with(['kelas', 'guruPengampu', 'tahunAjaran'])
-                ->whereHas('kelas.siswas', function($query) use ($user) {
-                    $query->where('id', $user->siswa->id);
-                })->orderBy('created_at', 'desc')->get();
-        }else {
-            $mataPelajaran = collect();
+            // Jika Guru, ambil data mata pelajaran yang diampunya
+            // Cek apakah user memiliki data pegawai
+            if ($user->pegawai) {
+                $mataPelajaran = MataPelajaran::with(['kelas', 'guruPengampu', 'tahunAjaran'])
+                    ->where('guru_pengampu_id', $user->pegawai->id)
+                    ->orderBy('created_at', 'desc')->get();
+            }
+        } else if (in_array('siswa', $roles)) {
+            // Jika Siswa, ambil data mata pelajaran yang sesuai dengan kelasnya
+            // Lakukan pengecekan untuk menghindari error "Attempt to read property 'id' on null"
+            if ($user->siswa && $user->siswa->kelas_id) {
+                $kelasId = $user->siswa->kelas_id;
+
+                $mataPelajaran = MataPelajaran::with(['kelas', 'guruPengampu', 'tahunAjaran'])
+                    ->where('kelas_id', $kelasId)
+                    ->orderBy('created_at', 'desc')
+                    ->get();
+            }
         }
+
         return view('master.mata-pelajaran.index', ['title' => 'Mata Pelajaran'], compact('mataPelajaran'));
     }
-
 
     public function create()
     {
         $kelas = Kelas::all();
-        $guruPengampu = Pegawai::whereHas('user.roles', function($q) {
+        $guruPengampu = Pegawai::whereHas('user.roles', function ($q) {
             $q->where('name', 'guru');
         })->get();
         $tahunAjaran = TahunAjaran::where('status', true)->first();
@@ -55,7 +66,7 @@ class MataPelajaranController extends Controller
             'tahun_ajaran_id' => 'required|exists:tahun_ajaran,id',
             'nama_mata_pelajaran' => 'required|string|max:255',
             'deskripsi' => 'nullable|string',
-        ],[
+        ], [
             'kelas_id.required' => 'Kelas harus dipilih.',
             'guru_pengampu_id.required' => 'Guru pengampu harus dipilih.',
             'tahun_ajaran_id.required' => 'Tahun ajaran harus dipilih.',
@@ -63,7 +74,7 @@ class MataPelajaranController extends Controller
         ]);
 
         if ($validasi->fails()) {
-             return response()->json([
+            return response()->json([
                 'status' => 400,
                 'errors' => $validasi->messages()
             ]);
@@ -83,14 +94,13 @@ class MataPelajaranController extends Controller
                 'message' => 'Mata pelajaran berhasil ditambahkan.'
             ]);
         }
-
     }
 
     public function edit(string $id)
     {
         $mataPelajaran = MataPelajaran::with('tahunAjaran')->findOrFail($id);
         $kelas = Kelas::all();
-        $guruPengampu = Pegawai::whereHas('user.roles', function($q) {
+        $guruPengampu = Pegawai::whereHas('user.roles', function ($q) {
             $q->where('name', 'guru');
         })->get();
         $tahunAjaran = TahunAjaran::where('status', true)->first();
@@ -100,13 +110,13 @@ class MataPelajaranController extends Controller
 
     public function update(Request $request, string $id)
     {
-       $validasi = Validator::make($request->all(), [
+        $validasi = Validator::make($request->all(), [
             'kelas_id' => 'required|exists:kelas,id',
             'guru_pengampu_id' => 'required|exists:pegawai,id',
             'tahun_ajaran_id' => 'required|exists:tahun_ajaran,id',
             'nama_mata_pelajaran' => 'required|string|max:255',
             'deskripsi' => 'nullable|string',
-        ],[
+        ], [
             'kelas_id.required' => 'Kelas harus dipilih.',
             'guru_pengampu_id.required' => 'Guru pengampu harus dipilih.',
             'tahun_ajaran_id.required' => 'Tahun ajaran harus dipilih.',
@@ -114,7 +124,7 @@ class MataPelajaranController extends Controller
         ]);
 
         if ($validasi->fails()) {
-             return response()->json([
+            return response()->json([
                 'status' => 400,
                 'errors' => $validasi->messages()
             ]);

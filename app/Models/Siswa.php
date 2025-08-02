@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Siswa extends Model
 {
-     protected $table = 'siswa';
+    protected $table = 'siswa';
     protected $guarded = ['id'];
 
     public function user()
@@ -19,12 +19,11 @@ class Siswa extends Model
 
     public function kelas()
     {
-        return $this->belongsTo(Kelas::class, 'kelas_id');
+        return $this->belongsTo(Kelas::class, 'kelas_id', 'id');
     }
 
     public function pengumpulanTugas()
     {
-        return $this->hasMany(PengumpulanTugas::class, 'siswa_id', 'siswa_id');
+        return $this->hasMany(PengumpulanTugas::class, 'siswa_id');
     }
-
 }

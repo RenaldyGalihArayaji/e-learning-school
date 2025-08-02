@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('pengumpulan_tugas', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('tugas_id')->constrained('tugas')->onDelete('cascade');
-            $table->foreignId('siswa_id')->constrained('siswa')->onDelete('cascade');
+            $table->foreignId('tugas_id')->constrained('tugas')->cascadeOnDelete();
+            $table->foreignId('siswa_id')->constrained('siswa')->cascadeOnDelete();
             $table->text('jawaban')->nullable();
             $table->string('file')->nullable();
             $table->dateTime('tanggal_pengumpulan')->nullable();

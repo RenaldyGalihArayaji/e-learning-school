@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('pegawai', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->nullable()->constrained('users')->cascadeOnDelete();
+            $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
             $table->string('nama_lengkap');
             $table->string('nip')->nullable();
             $table->enum('jenis_kelamin', ['L', 'P']);

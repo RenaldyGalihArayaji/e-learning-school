@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('siswa', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->nullable()->constrained('users')->cascadeOnDelete();
-            $table->foreignId('kelas_id')->nullable()->constrained('kelas')->cascadeOnDelete();
+            $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
+            $table->foreignId('kelas_id')->nullable()->constrained('kelas')->nullOnDelete();
             $table->string('nama_lengkap');
             $table->string('nisn')->nullable();
             $table->string('nis')->nullable();

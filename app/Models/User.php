@@ -3,6 +3,8 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\Siswa;
+use App\Models\Pegawai;
 use Spatie\Permission\Traits\HasRoles;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -48,8 +50,4 @@ class User extends Authenticatable
         return $this->hasOne(Siswa::class, 'user_id');
     }
 
-    public function mataPelajaran()
-    {
-        return $this->belongsTo(MataPelajaran::class, 'mata_pelajaran_id');
-    }
 }

@@ -39,7 +39,14 @@
                                             @endif
                                         </td>
                                         <td>{{ $item->angkatan }}</td>
-                                        <td>{{ $item->kelas->nama_kelas }}</td>
+                                        <td>
+                                            {{-- Perbaikan di sini: Tambahkan pengecekan null sebelum mengakses properti --}}
+                                            @if ($item->kelas)
+                                                {{ $item->kelas->nama_kelas }}
+                                            @else
+                                                <span class="text-danger">Tidak Terdaftar</span>
+                                            @endif
+                                        </td>
                                         <td>{{ ucwords($item->user->username) }}</td>
                                         <td>
                                             <button class="btn btn-outline-success btn-sm" onclick="edit({{ $item->id }})"><i

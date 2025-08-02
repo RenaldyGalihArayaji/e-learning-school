@@ -17,15 +17,16 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        // Kode diletakkan di sini
-        $tahunAjaranAktif = TahunAjaran::first();
+        // Mendapatkan tahun ajaran aktif
+        $tahunAjaranAktif = TahunAjaran::where('status', true)->first();
 
-        // Lakukan pengecekan
+        // Lakukan pengecekan, jika tidak ada tahun ajaran aktif, beri nilai default
         if ($tahunAjaranAktif) {
             $namaTahunAjaran = $tahunAjaranAktif->nama_tahun_ajaran;
         } else {
             $namaTahunAjaran = "Tidak ada tahun ajaran aktif";
         }
+
         $user = Auth::user();
 
         // Inisialisasi variabel dengan nilai default
@@ -67,40 +68,41 @@ class DashboardController extends Controller
                 $jmlMapel = MataPelajaran::where('guru_pengampu_id', $pegawaiId)->count();
             }
         } elseif (in_array('siswa', $roles)) {
-            // Jika Siswa, hanya tampilkan data terkait kelasnya
-            $kelasId = $user->siswa->kelas_id ?? null;
-            if ($kelasId) {
-                $jmlKelas = 1; // Siswa hanya terkait dengan 1 kelas
-                $jumlahSiswa = Siswa::where('kelas_id', $kelasId)->count();
-                $jmlMapel = MataPelajaran::where('kelas_id', $kelasId)->count();
+            // Jika Siswa, hitung data terkait kelasnya
+            $siswa = $user->siswa;
+            if ($siswa) {
+                $kelasId = $siswa->kelas_id;
+                $siswaId = $siswa->id;
+
+                if ($kelasId) {
+                    $jmlKelas = 1; // Siswa hanya terkait dengan 1 kelas
+                    $jumlahSiswa = Siswa::where('kelas_id', $kelasId)->count();
+                    $jmlMapel = MataPelajaran::where('kelas_id', $kelasId)->count();
+
+                    // Logika untuk mengambil data tugas (khusus siswa)
+                    $tugas = Tugas::with(['mataPelajaran'])
+                        ->whereHas('mataPelajaran', function ($query) use ($kelasId) {
+                            $query->where('kelas_id', $kelasId);
+                        })
+                        ->whereDoesntHave('pengumpulanTugas', function ($query) use ($siswaId) {
+                            $query->where('siswa_id', $siswaId);
+                        })
+                        ->orderBy('created_at', 'desc')
+                        ->take(5)
+                        ->get();
+
+                    // Perhitungan total tugas untuk kelas tersebut
+                    $tugasIds = Tugas::whereHas('mataPelajaran', function ($query) use ($kelasId) {
+                        $query->where('kelas_id', $kelasId);
+                    })->pluck('id');
+
+                    $jumlahTugasTerkumpul = PengumpulanTugas::where('siswa_id', $siswaId)
+                        ->whereIn('tugas_id', $tugasIds)
+                        ->count();
+
+                    $jumlahTugasBelumTerkumpul = count($tugasIds) - $jumlahTugasTerkumpul;
+                }
             }
-        }
-
-        // Logika untuk mengambil data tugas (khusus siswa)
-        if (in_array('siswa', $roles) && $user->siswa) {
-            $kelasId = $user->siswa->kelas_id;
-            $siswaId = $user->siswa->id;
-
-            $tugas = Tugas::with(['mataPelajaran.kelas'])
-                ->whereHas('mataPelajaran.kelas', function ($query) use ($kelasId) {
-                    $query->where('id', $kelasId);
-                })
-                ->whereDoesntHave('pengumpulanTugas', function ($query) use ($siswaId) {
-                    $query->where('siswa_id', $siswaId);
-                })
-                ->orderBy('created_at', 'desc')
-                ->take(5)
-                ->get();
-
-            $tugasIds = Tugas::whereHas('mataPelajaran.kelas', function ($query) use ($kelasId) {
-                $query->where('id', $kelasId);
-            })->pluck('id');
-
-            $jumlahTugasTerkumpul = PengumpulanTugas::where('siswa_id', $siswaId)
-                ->whereIn('tugas_id', $tugasIds)
-                ->count();
-
-            $jumlahTugasBelumTerkumpul = count($tugasIds) - $jumlahTugasTerkumpul;
         }
 
         return view('master.dashboard', [

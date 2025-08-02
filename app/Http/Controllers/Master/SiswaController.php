@@ -35,7 +35,7 @@ class SiswaController extends Controller
     {
         $validasi = Validator::make($request->all(),[
             'user_id' => 'nullable|exists:users,id',
-            'kelas_id' => 'nullable|exists:kelas,id',
+            'kelas_id' => 'required|exists:kelas,id',
             'nama_lengkap' => 'required|max:200',
             'nisn' => 'nullable|string|max:20',
             'nis' => 'nullable|string|max:20',
@@ -57,6 +57,7 @@ class SiswaController extends Controller
             'no_telp.max' => 'Nomor telepon maksimal 15 karakter!',
             'angkatan.max' => 'Angkatan maksimal 10 karakter!',
             'kelas_id.exists' => 'Kelas yang dipilih tidak valid!',
+            'kelas_id.required' => 'Kelas harus dipilih!',
             'user_id.exists' => 'User yang dipilih tidak valid!',
             'nisn.max' => 'NISN maksimal 20 karakter!',
             'nis.max' => 'NIS maksimal 20 karakter!',
