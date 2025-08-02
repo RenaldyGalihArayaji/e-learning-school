@@ -13,7 +13,7 @@ class TahunAjaranController extends Controller
 
     public function index()
     {
-        $tahunAjaran = TahunAjaran::all();
+        $tahunAjaran = TahunAjaran::orderBy('status', 'desc')->orderBy('created_at', 'desc')->get();
         return view('master.tahun_ajaran.index', ['title' => 'Tahun Ajaran'], compact('tahunAjaran'));
     }
 
@@ -38,6 +38,10 @@ class TahunAjaranController extends Controller
                 'errors' => $validasi->errors(),
             ]);
         } else {
+            // Jika status true, set semua status lain menjadi false
+            if ($request->status == true || $request->status == 1 || $request->status === '1') {
+                TahunAjaran::where('status', true)->update(['status' => false]);
+            }
             TahunAjaran::create([
                 'nama_tahun_ajaran' => $request->nama_tahun_ajaran,
                 'status' => $request->status,
@@ -71,6 +75,10 @@ class TahunAjaranController extends Controller
             ]);
         } else {
             $tahunAjaran = TahunAjaran::findOrFail($id);
+            // Jika status true, set semua status lain menjadi false
+            if ($request->status == true || $request->status == 1 || $request->status === '1') {
+                TahunAjaran::where('id', '!=', $id)->where('status', true)->update(['status' => false]);
+            }
             $tahunAjaran->update([
                 'nama_tahun_ajaran' => $request->nama_tahun_ajaran,
                 'status' => $request->status,

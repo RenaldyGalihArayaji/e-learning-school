@@ -24,17 +24,12 @@
                 <div id="kelas_idFeedback" class="invalid-feedback"></div>
             </div>
         </div>
-        <div class="col-md-6">
+         <div class="col-md-6">
             <div class="mb-3">
                 <label for="tahun_ajaran_id" class="form-label">Tahun Ajaran <span class="text-danger">*</span></label>
-                <select class="form-select" id="tahun_ajaran_id" name="tahun_ajaran_id">
-                    <option value="" disabled {{ old('tahun_ajaran_id', $mataPelajaran->tahun_ajaran_id) == null ? 'selected' : '' }}>--Pilih--</option>
-                    @foreach ($tahunAjaran as $item)
-                        <option value="{{ $item->id }}" {{ old('tahun_ajaran_id', $mataPelajaran->tahun_ajaran_id) == $item->id ? 'selected' : '' }}>
-                            {{ $item->nama_tahun_ajaran }}
-                        </option>
-                    @endforeach
-                </select>
+                <input type="text" class="form-control" id="tahun_ajaran_id" name="tahun_ajaran_id"
+                    value="{{ $mataPelajaran->tahunAjaran->nama_tahun_ajaran }}" disabled>
+                    <input type="hidden" name="tahun_ajaran_id" value="{{ $tahunAjaran->id }}">
                 <div id="tahun_ajaran_idFeedback" class="invalid-feedback"></div>
             </div>
         </div>

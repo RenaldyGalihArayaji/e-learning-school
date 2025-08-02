@@ -28,7 +28,7 @@ class PengumpulanTugasController extends Controller
         $mataPelajaranIds = MataPelajaran::where('kelas_id', $kelasId)->pluck('id');
         $tugas = Tugas::whereIn('mata_pelajaran_id', $mataPelajaranIds)
             ->with(['mataPelajaran', 'pegawai','pengumpulanTugas'])
-            ->get();
+            ->orderBy('created_at', 'desc')->get();
         return view('master.tugas-siswa.index', ['title' => 'Pengumpulan Tugas'], compact('tugas'));
     }
 

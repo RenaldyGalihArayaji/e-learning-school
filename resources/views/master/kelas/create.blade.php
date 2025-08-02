@@ -11,6 +11,15 @@
         </div>
         <div class="col-md-4">
             <div class="mb-3">
+                <label for="tahun_ajaran" class="form-label">Tahun Ajaran<span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="tahun_ajaran" name="tahun_ajaran"
+                    value="{{ $tahunAjaran->nama_tahun_ajaran }}" disabled>
+                <input type="hidden" name="tahun_ajaran_id" value="{{ $tahunAjaran->id }}">
+                <div id="tahun_ajaran_idFeedback" class="invalid-feedback"></div>
+            </div>
+        </div>
+        {{-- <div class="col-md-4">
+            <div class="mb-3">
                 <label for="tahun_ajaran_id" class="form-label">Tahun Ajaran <span class="text-danger">*</span></label>
                 <select class="form-select" id="tahun_ajaran_id" name="tahun_ajaran_id">
                     <option value="">Pilih Tahun Ajaran</option>
@@ -20,7 +29,7 @@
                 </select>
                 <div id="tahun_ajaran_idFeedback" class="invalid-feedback"></div>
             </div>
-        </div>
+        </div> --}}
         <div class="col-md-4">
             <div class="mb-3">
                 <label for="pegawai_id" class="form-label">Wali Kelas <span class="text-danger">*</span></label>

@@ -19,16 +19,16 @@ class MataPelajaranController extends Controller
         $user = Auth::user();
         $roles = $user->roles->pluck('name')->toArray();
         if (in_array('super-admin', $roles)) {
-            $mataPelajaran = MataPelajaran::with(['kelas', 'guruPengampu', 'tahunAjaran'])->get();
+            $mataPelajaran = MataPelajaran::with(['kelas', 'guruPengampu', 'tahunAjaran'])->orderBy('created_at', 'desc')->get();
         } else if (in_array('guru', $roles)) {
             $mataPelajaran = MataPelajaran::with(['kelas', 'guruPengampu', 'tahunAjaran'])
                 ->where('guru_pengampu_id', $user->pegawai->id)
-                ->get();
+                ->orderBy('created_at', 'desc')->get();
         } else if(in_array('siswa', $roles)) {
             $mataPelajaran = MataPelajaran::with(['kelas', 'guruPengampu', 'tahunAjaran'])
                 ->whereHas('kelas.siswas', function($query) use ($user) {
                     $query->where('id', $user->siswa->id);
-                })->get();
+                })->orderBy('created_at', 'desc')->get();
         }else {
             $mataPelajaran = collect();
         }
@@ -42,7 +42,7 @@ class MataPelajaranController extends Controller
         $guruPengampu = Pegawai::whereHas('user.roles', function($q) {
             $q->where('name', 'guru');
         })->get();
-        $tahunAjaran = TahunAjaran::all();
+        $tahunAjaran = TahunAjaran::where('status', true)->first();
         return view('master.mata-pelajaran.create', compact('kelas', 'guruPengampu', 'tahunAjaran'));
     }
 
@@ -88,12 +88,12 @@ class MataPelajaranController extends Controller
 
     public function edit(string $id)
     {
-        $mataPelajaran = MataPelajaran::findOrFail($id);
+        $mataPelajaran = MataPelajaran::with('tahunAjaran')->findOrFail($id);
         $kelas = Kelas::all();
         $guruPengampu = Pegawai::whereHas('user.roles', function($q) {
             $q->where('name', 'guru');
         })->get();
-        $tahunAjaran = TahunAjaran::all();
+        $tahunAjaran = TahunAjaran::where('status', true)->first();
         return view('master.mata-pelajaran.edit', compact('mataPelajaran', 'kelas', 'guruPengampu', 'tahunAjaran'));
     }
 

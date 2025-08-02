@@ -39,7 +39,7 @@
 
         <div class="col-md-4">
             <div class="mb-3">
-                <label for="type_file" class="form-label">File Tugas</label>
+                <label for="type_file" class="form-label">File Tugas <span class="text-danger">*jpg,jpeg,png,pdf*</span></label>
                 <input type="file" class="form-control" id="type_file" name="type_file">
                 <div id="type_fileFeedback" class="invalid-feedback"></div>
             </div>

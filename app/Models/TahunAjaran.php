@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Kelas;
 use App\Models\MataPelajaran;
 use Illuminate\Database\Eloquent\Model;
 

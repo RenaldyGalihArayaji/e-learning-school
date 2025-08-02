@@ -64,8 +64,7 @@
 
         <div class="col-md-6">
             <div class="mb-3">
-                <label for="file" class="form-label fw-bold">File Tugas (Opsional) <span class="text-danger">Format:
-                        JPG,JPEG,PNG,PDF</span></label>
+                <label for="file" class="form-label fw-bold">File Tugas (Opsional) <span class="text-danger">*jpg,jpeg,png,pdf*</span></label>
                 @if ($pengumpulan && $pengumpulan->status == true)
                     <input type="file" class="form-control bg-light" id="file" name="file" disabled>
                 @else

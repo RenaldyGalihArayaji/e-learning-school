@@ -17,7 +17,7 @@ class SiswaController extends Controller
 
     public function index()
     {
-        $siswa = Siswa::with(['user','kelas'])->get();
+        $siswa = Siswa::with(['user','kelas'])->orderBy('created_at', 'desc')->get();
         return view('master.siswa.index',['title' => 'siswa'], compact('siswa'));
     }
 

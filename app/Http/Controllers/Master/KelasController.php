@@ -16,12 +16,7 @@ class KelasController extends Controller
 
     public function index()
     {
-        $kelas = Kelas::with([
-            'pegawai',
-            'tahunAjaran' => function ($query) {
-                $query->where('status', true);
-            }
-        ])->get();
+        $kelas = Kelas::with(['pegawai','tahunAjaran'])->orderBy('created_at', 'desc')->get();
 
         return view('master.kelas.index', ['title' => 'Kelas'], compact('kelas'));
     }
@@ -31,7 +26,7 @@ class KelasController extends Controller
         $pegawai = Pegawai::whereHas('user.roles', function($q) {
             $q->where('name', 'guru');
         })->get();
-        $tahunAjaran = TahunAjaran::where('status', true)->get();
+        $tahunAjaran = TahunAjaran::where('status', true)->first();
         return view('master.kelas.create', ['title' => 'Tambah Kelas'], compact('pegawai', 'tahunAjaran'));
     }
 
@@ -72,11 +67,11 @@ class KelasController extends Controller
 
     public function edit(string $id)
     {
-        $kelas = Kelas::findOrFail($id);
+        $kelas = Kelas::with('tahunAjaran')->findOrFail($id);
         $pegawai = Pegawai::whereHas('user.roles', function($q) {
             $q->where('name', 'guru');
         })->get();
-        $tahunAjaran = TahunAjaran::where('status', true)->get();
+        $tahunAjaran = TahunAjaran::where('status', true)->first();
 
         return view('master.kelas.edit', ['title' => 'Edit Kelas'], compact('kelas', 'pegawai', 'tahunAjaran'));
     }

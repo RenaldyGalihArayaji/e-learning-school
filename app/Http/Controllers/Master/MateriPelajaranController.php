@@ -17,7 +17,7 @@ class MateriPelajaranController extends Controller
     public function index($id)
     {
         $mataPelajaran = MataPelajaran::findOrFail($id);
-        $materiPelajaran = MateriPelajaran::where('mata_pelajaran_id', $id)->get();
+        $materiPelajaran = MateriPelajaran::where('mata_pelajaran_id', $id)->orderBy('created_at', 'desc')->get();
         return view('master.materi-pelajaran.index',['title' => 'Materi Pelajaran'],compact(['materiPelajaran', 'mataPelajaran']));
     }
 

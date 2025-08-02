@@ -21,7 +21,7 @@
 
         <div class="col-md-4">
             <div class="mb-3">
-                <label for="type_file" class="form-label">File Materi</label>
+                <label for="type_file" class="form-label">File Materi <span class="text-danger">*jpg,jpeg,png,pdf*</span></label>
                 <input type="file" class="form-control" id="type_file" name="type_file"
                     placeholder="Masukan Nama Mata Pelajaran">
                 <div id="type_fileFeedback" class="invalid-feedback"></div>

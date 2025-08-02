@@ -20,11 +20,11 @@ class TugasController extends Controller
         $user = Auth::user();
         $roles = $user->roles->pluck('name')->toArray();
         if (in_array('super-admin', $roles)) {
-            $tugas = Tugas::with(['pegawai', 'mataPelajaran'])->get();
+            $tugas = Tugas::with(['pegawai', 'mataPelajaran'])->orderBy('created_at', 'desc')->get();
         } else if (in_array('guru', $roles)) {
             $tugas = Tugas::with(['pegawai', 'mataPelajaran'])
                 ->where('pegawai_id', $user->pegawai->id)
-                ->get();
+                ->orderBy('created_at', 'desc')->get();
         } else {
             $tugas = collect();
         }
