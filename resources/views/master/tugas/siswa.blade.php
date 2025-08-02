@@ -15,7 +15,7 @@
                         <div class="d-flex justify-content-between align-items-center">
                             <div></div>
                             <div>
-                                <a href="{{ route('mata-pelajaran.index') }}"
+                                <a href="{{ route('tugas.index') }}"
                                     class="btn mb-3 icon-left btn-secondary btn-sm "><i
                                         class="bi bi-arrow-left-circle me-2"></i>Kembali</a>
                             </div>

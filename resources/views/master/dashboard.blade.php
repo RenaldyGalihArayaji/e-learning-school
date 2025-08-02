@@ -136,24 +136,23 @@
             @endcan
 
 
-
-            <div class="col-md-3">
-                <div class="card border-0 h-100 py-3" style="border-radius: 15px;">
-                    <div class="card-body">
-                        <div class="row no-gutters align-items-center">
-                            <div class="col mr-2">
-                                <h5 class="font-weight-bold text-uppercase text-secondary mb-1">Tahun Ajaran</h5>
-                                <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                    {{ $tahunAjaranAktif->nama_tahun_ajaran }}</div>
-                            </div>
-                            <div class="col-auto">
-                                <img src="{{ asset('template-admin/assets/image/tahun.gif') }}" alt=""
-                                    width="60" height="60">
-                            </div>
-                        </div>
+<div class="col-md-3">
+    <div class="card border-0 h-100 py-3" style="border-radius: 15px;">
+        <div class="card-body">
+            <div class="row no-gutters align-items-center">
+                <div class="col mr-2">
+                    <h5 class="font-weight-bold text-uppercase text-secondary mb-1">Tahun Ajaran</h5>
+                    <div class="h5 mb-0 font-weight-bold text-gray-800">
+                        {{ $namaTahunAjaran }}
                     </div>
                 </div>
+                <div class="col-auto">
+                    <img src="{{ asset('template-admin/assets/image/tahun.gif') }}" alt="" width="60" height="60">
+                </div>
             </div>
+        </div>
+    </div>
+</div>
 
 
 

@@ -27,7 +27,7 @@
                                     <th>No</th>
                                     <th>Nama Mata Pelajaran</th>
                                     <th>Kelas</th>
-                                    <th>Guru Pengampu</th>
+                                    <th>Guru</th>
                                     <th>Tahun Ajaran</th>
                                     @can('view materi-pelajaran')
                                         <th>Jumlah Siswa</th>

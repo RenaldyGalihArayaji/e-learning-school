@@ -35,7 +35,7 @@
         </div>
         <div class="col-md-6">
             <div class="mb-3">
-                <label for="guru_pengampu_id" class="form-label">Wali Kelas <span class="text-danger">*</span></label>
+                <label for="guru_pengampu_id" class="form-label">Guru <span class="text-danger">*</span></label>
                 <select class="form-select" id="guru_pengampu_id" name="guru_pengampu_id">
                     <option value="" disabled {{ old('guru_pengampu_id', $mataPelajaran->guru_pengampu_id) == null ? 'selected' : '' }}>--Pilih--</option>
                     @foreach ($guruPengampu as $item)
