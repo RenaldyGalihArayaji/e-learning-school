@@ -13,32 +13,6 @@ use Illuminate\Support\Facades\Auth;
 
 class RekapNilaiController extends Controller
 {
-    public function exportSiswa(Request $request)
-    {
-        $user = Auth::user();
-        $siswa = $user->siswa;
-        if (!$siswa) {
-            return redirect()->back()->with('error', 'Anda tidak terdaftar sebagai siswa.');
-        }
-
-        $query = PengumpulanTugas::whereHas('siswa', function ($q) use ($siswa) {
-            $q->where('id', $siswa->id);
-        })->with(['tugas.mataPelajaran.guruPengampu']);
-
-        if ($request->mata_pelajaran_id) {
-            $query->whereHas('tugas.mataPelajaran', function ($q) use ($request) {
-                $q->where('id', $request->mata_pelajaran_id);
-            });
-        }
-
-        $pengumpulanTugas = $query->get();
-
-        $pdf = PDF::loadView('master.rekap-nilai.export-pdf-siswa', [
-            'pengumpulanTugas' => $pengumpulanTugas
-        ]);
-        return $pdf->download('rekap-nilai-siswa.pdf');
-    }
-
     public function export(Request $request)
     {
         $user = Auth::user();
@@ -156,5 +130,31 @@ class RekapNilaiController extends Controller
             'pengumpulanTugas' => $pengumpulanTugas,
             'mataPelajaran' => $mataPelajaran,
         ]);
+    }
+
+    public function exportSiswa(Request $request)
+    {
+        $user = Auth::user();
+        $siswa = $user->siswa;
+        if (!$siswa) {
+            return redirect()->back()->with('error', 'Anda tidak terdaftar sebagai siswa.');
+        }
+
+        $query = PengumpulanTugas::whereHas('siswa', function ($q) use ($siswa) {
+            $q->where('id', $siswa->id);
+        })->with(['tugas.mataPelajaran.guruPengampu']);
+
+        if ($request->mata_pelajaran_id) {
+            $query->whereHas('tugas.mataPelajaran', function ($q) use ($request) {
+                $q->where('id', $request->mata_pelajaran_id);
+            });
+        }
+
+        $pengumpulanTugas = $query->get();
+
+        $pdf = PDF::loadView('master.rekap-nilai.export-pdf-siswa', [
+            'pengumpulanTugas' => $pengumpulanTugas
+        ]);
+        return $pdf->download('rekap-nilai-siswa.pdf');
     }
 }
